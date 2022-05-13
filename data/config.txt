@@ -1,0 +1,4 @@
+gpu---->0
+data_dir---->/data/ovo/text_sentiment_data
+output_dir---->data
+exp_name---->None
