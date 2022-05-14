@@ -1,4 +1,8 @@
 gpu---->0
 data_dir---->/data/ovo/text_sentiment_data
 output_dir---->data
-exp_name---->None
+model_type---->cnn
+lr---->0.001
+epochs---->1000
+batch_size---->128
+dropout---->0.5
