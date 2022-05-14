@@ -5,5 +5,6 @@
 - [ ] 加上shuffle
 - [ ] CNN网络搭建
 - [ ] LSTM网络搭建
+- [ ] transformer
 - [ ] training stage(还有writer别忘了)
-- [x] 睡大觉
+- [x] 这么年轻怎么能睡得着呢ヾ(；ﾟ(OO)ﾟ)ﾉ
