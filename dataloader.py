@@ -102,7 +102,7 @@ def get_dataloader(args,text_field,label_field):
     
     train_itr, val_itr,test_itr = data.Iterator.splits(
         (train_dataset, val_dataset,test_dataset),
-        batch_sizes=(args.batch_size, args.batch_size,args.batch_size),
+        batch_sizes=(args.batch_size, len(val_dataset),len(test_dataset)),
         shuffle=False,
         repeat=False,
         # sort_key=lambda x: len(x.text),
