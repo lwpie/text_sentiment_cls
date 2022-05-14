@@ -1,13 +1,17 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import csv
+import os
 from cgi import test
 from distutils import text_file
-import os
-import csv
 from pkgutil import get_data
+
+import torchtext.data as data
 from gensim.models.keyedvectors import KeyedVectors
 from matplotlib.pyplot import text
 from sklearn.preprocessing import binarize
 from sklearn.utils import shuffle
-import torchtext.data as data
 from torchtext.vocab import Vectors
 
 
@@ -65,28 +69,30 @@ def get_tsv(file_dir):
 #         fields=[('label',label_field),('text',text_field)],
 #         skip_header=True,
 #     )
-#     vectors = Vectors(os.path.join(args.data_dir,'wiki_word2vec_50.txt'), 'data') 
-#     text_field.build_vocab(train_dataset, val_dataset, vectors=vectors) 
+#     vectors = Vectors(os.path.join(args.data_dir,'wiki_word2vec_50.txt'), 'data')
+#     text_field.build_vocab(train_dataset, val_dataset, vectors=vectors)
 #     label_field.build_vocab(train_dataset, val_dataset)
 #     return train_dataset,val_dataset,test_dataset
 
 
-def get_dataloader(args,text_field,label_field):
+def get_dataloader(args, text_field, label_field):
 
-    train_dataset,val_dataset,test_dataset=data.TabularDataset.splits(
+    train_dataset, val_dataset, test_dataset = data.TabularDataset.splits(
         path='data',
         format='tsv',
         train='train.tsv',
         validation='validation.tsv',
         test='test.tsv',
-        fields=[('label',label_field),('txt',text_field)],
+        fields=[('label', label_field), ('txt', text_field)],
         skip_header=True,
     )
 
-    vectors = Vectors(os.path.join(args.data_dir,'wiki_word2vec_50.txt'), 'data') 
+    vectors = Vectors(os.path.join(
+        args.data_dir, 'wiki_word2vec_50.txt'), 'data')
     # print(vectors)
     # quit()
-    text_field.build_vocab(train_dataset, val_dataset,test_dataset,vectors=vectors) 
+    text_field.build_vocab(train_dataset, val_dataset,
+                           test_dataset, vectors=vectors)
     label_field.build_vocab(train_dataset, val_dataset)
     # print(text_field.vocab.vectors)
     # quit()
@@ -99,25 +105,22 @@ def get_dataloader(args,text_field,label_field):
     print(f'LOADING training set with size{len(train_dataset)}')
     print(f'LOADING validation set with size{len(val_dataset)}')
     print(f'LOADING test set with size{len(test_dataset)}')
-    
-    train_itr, val_itr,test_itr = data.Iterator.splits(
-        (train_dataset, val_dataset,test_dataset),
-        batch_sizes=(args.batch_size, len(val_dataset),len(test_dataset)),
+
+    train_itr, val_itr, test_itr = data.Iterator.splits(
+        (train_dataset, val_dataset, test_dataset),
+        batch_sizes=(args.batch_size, len(val_dataset), len(test_dataset)),
         shuffle=False,
         repeat=False,
         # sort_key=lambda x: len(x.text),
-        )  # 构造迭代器
-    return train_itr, val_itr,test_itr,text_field.vocab.vectors
-
+    )  # 构造迭代器
+    return train_itr, val_itr, test_itr, text_field.vocab.vectors
 
 
 if __name__ == "__main__":
     get_tsv('/data/ovo/text_sentiment_data')
     bin2txt('/data/ovo/text_sentiment_data')
-    train_dataset,val_dataset=get_dataset()
+    train_dataset, val_dataset = get_dataset()
     print(len(train_dataset))
     print(len(val_dataset))
     # print(train_dataset[0].label,train_dataset[0].text)
     # print(train_dataset[1].label,train_dataset[1].text)
-
-    
