@@ -46,7 +46,7 @@ def get_tsv(file_dir):
         assert(os.path.exists(file_pth))
         with open(f'data/{mode}.tsv', 'w+', encoding="utf8")as t:
             tsv_w = csv.writer(t, delimiter='\t')
-            tsv_w.writerow(['label', 'txt'])
+            tsv_w.writerow(['label', 'text'])
             with open(file_pth, 'r', encoding='utf8')as f:
                 for line in f.readlines():
                     # 去掉str左右端的空格并以空格分割成list
@@ -55,24 +55,26 @@ def get_tsv(file_dir):
     print('done')
 
 
-# def get_dataset(args):
-#     def remain(txt):
-#         return txt
-#     text_field = data.Field(lower=True)  # 文本域
-#     label_field = data.Field(sequential=False)  # 标签域
-#     text_field.tokenize=remain
-#     train_dataset,val_dataset=data.TabularDataset.splits(
-#         path='data',
-#         format='tsv',
-#         train='train.tsv',
-#         validation='validation.tsv',
-#         fields=[('label',label_field),('text',text_field)],
-#         skip_header=True,
-#     )
-#     vectors = Vectors(os.path.join(args.data_dir,'wiki_word2vec_50.txt'), 'data')
-#     text_field.build_vocab(train_dataset, val_dataset, vectors=vectors)
-#     label_field.build_vocab(train_dataset, val_dataset)
-#     return train_dataset,val_dataset,test_dataset
+def get_dataset(args):
+    def remain(txt):
+        return txt
+    text_field = data.Field(lower=True)  # 文本域
+    label_field = data.Field(sequential=False)  # 标签域
+    text_field.tokenize = remain
+    train_dataset, val_dataset = data.TabularDataset.splits(
+        path='data',
+        format='tsv',
+        train='train.tsv',
+        validation='validation.tsv',
+        fields=[('label', label_field), ('text', text_field)],
+        skip_header=True,
+    )
+    vectors = Vectors(os.path.join(
+        args.data_dir, 'wiki_word2vec_50.txt'), 'data')
+    text_field.build_vocab(train_dataset, val_dataset, vectors=vectors)
+    label_field.build_vocab(train_dataset, val_dataset)
+    print(text_field.vocab.vectors)
+    return train_dataset, val_dataset
 
 
 def get_dataloader(args, text_field, label_field):
